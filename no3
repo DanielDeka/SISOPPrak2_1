@@ -1,0 +1,61 @@
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <unistd.h>
+#include <string.h>
+#include <stdlib.h>
+#include <syslog.h>
+#include <stdio.h>
+#include <fcntl.h>
+#include <errno.h>
+
+void generate_virus (char *namaFile, int jumlah) {
+    char jumlahString[8];
+    sprintf (jumlahString, "%d", jumlah);
+    char fileVirus[64];
+    strcat (strcat (strcpy (fileVirus, namaFile), jumlahString), ".txt");
+    FILE *virus = fopen (fileVirus, "w+");
+    fclose (virus);
+}
+
+void mainProgram () {
+    strcat (strcpy (fileInduk,"/home/daniel/"), "induk.txt");
+    printf ("%s\n", fileInduk);
+    
+    strcat (strcpy (fileVirus,"/home/daniel/"), "virus");
+    printf ("%s\n", fileVirus);
+    
+    int statusInduk = 1;
+    int jumlahVirus = 1;
+    FILE *induk;
+    
+    while (!((induk = fopen (fileInduk, "r")) && statusInduk == 0)) {
+        if (induk != NULL) statusInduk = 1;
+        else statusInduk = 0;
+        generate_virus (fileVirus, jumlahVirus);
+        jumlahVirus++;
+        sleep (10);
+    }
+    
+    fclose (induk);
+}
+
+int main (int argc, char **argv) {
+    pid_t pid, sid;
+    pid = fork ();
+    if (pid < 0)
+        exit (EXIT_FAILURE);
+    if (pid > 0)
+        exit (EXIT_SUCCESS);
+    umask (0);
+    sid = setsid ();
+    if (sid < 0)
+        exit (EXIT_FAILURE);
+    if ((chdir ("/")) < 0)
+        exit (EXIT_FAILURE);
+    close (STDIN_FILENO);
+    close (STDOUT_FILENO);
+    close (STDERR_FILENO);
+    
+    mainProgram ();
+    exit (EXIT_SUCCESS);
+}
