@@ -18,28 +18,30 @@ void generate_virus (char *namaFile, int jumlah) {
 }
 
 void mainProgram () {
+    char fileInduk[64];
     strcat (strcpy (fileInduk,"/home/daniel/"), "induk.txt");
     printf ("%s\n", fileInduk);
     
+    char fileVirus[64];
     strcat (strcpy (fileVirus,"/home/daniel/"), "virus");
     printf ("%s\n", fileVirus);
     
     int statusInduk = 1;
-    int jumlahVirus = 1;
+    int virus_jumlah = 1;
     FILE *induk;
     
     while (!((induk = fopen (fileInduk, "r")) && statusInduk == 0)) {
         if (induk != NULL) statusInduk = 1;
         else statusInduk = 0;
-        generate_virus (fileVirus, jumlahVirus);
-        jumlahVirus++;
+        generate_virus (fileVirus, virus_jumlah);
+        virus_jumlah++;
         sleep (10);
     }
     
     fclose (induk);
 }
 
-int main (int argc, char **argv) {
+int main () {
     pid_t pid, sid;
     pid = fork ();
     if (pid < 0)
