@@ -7,8 +7,23 @@
 
 void bikin ()
 {
-	char *argv[6] = {"printf","'%s\n'","*",">","output.txt",NULL};
-	execv("/bin/printf",argv);
+    FILE * filein;
+    filein = fopen ("output.txt", "w");
+    struct dirent *de;
+ 
+    DIR *dr = opendir("/bin");
+ 
+    if (dr == NULL)
+    {
+        printf("Could not open current directory" );
+        return 0;
+    }
+ 
+    while ((de = readdir(dr)) != NULL)
+        fprintf(filein, "%s\n", de->d_name);
+ 
+    closedir(dr);    
+    return 0;
 }
 
 void comprss()
